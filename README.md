@@ -2,6 +2,8 @@
 bus-booking system
 
 ## Installation
+
+*  `cp .env.example to .env`
 * `docker-compose build`
 * `docker-compose up`
 
@@ -22,7 +24,9 @@ then type `sudo chown -R www-data:www-data storage/`
 
 
 ## Testing
-`vendor/bin/phpunit`
+```
+docker-compose exec php vendor/phpunit/bin
+```
 
 
 ## APIs
@@ -41,6 +45,10 @@ http://localhost:8081/api/v1/trips?start={start_point}&end={end_point}
 * header 
     * `access-token:{token-generated}` 
     * `Accept:application/json`
+    
+##Usage
+You can import database  directly ,it exists in the root folder.
+
     
 
     

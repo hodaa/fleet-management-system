@@ -21,7 +21,142 @@ class StationSeeder extends Seeder
 
         DB::table('lines')->insert([
             ['start_station_id'=>1 ,'end_station_id'=>4],
+            ['start_station_id'=>4 ,'end_station_id'=>2],
         ]);
 
+        DB::table('line_orders')->insert([
+            [
+                'line_id' => 1 ,
+                'station_id' => 1,
+                'next_station'=> 2,
+                'order' => 1
+
+            ],
+            [
+                'line_id' => 1 ,
+                'station_id' => 2,
+                'next_station'=> 3,
+                'order' => 2
+
+            ],
+            [
+                'line_id' => 1 ,
+                'station_id' => 3,
+                'next_station'=> 4,
+                'order' => 3
+
+            ],
+            [
+                'line_id' => 1 ,
+                'station_id' => 4,
+                'order' => 4,
+                'next_station'=> null,
+
+            ],
+            [
+                'line_id' => 2 ,
+                'station_id' => 4,
+                'next_station'=> 3,
+                'order' => 1
+
+            ],
+            [
+                'line_id' => 2 ,
+                'station_id' => 3,
+                'next_station'=> 2,
+                'order' => 2
+
+            ],
+            [
+                'line_id' => 2 ,
+                'station_id' => 2,
+                'next_station'=> 1,
+                'order' => 3
+
+            ],
+            [
+                'line_id' => 2 ,
+                'station_id' => 1,
+                'order' => 4,
+                'next_station'=> null,
+
+            ],
+        ]);
+
+        DB::table('bus_lines')->insert([
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ1',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ2',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ3',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ4',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ5',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ6',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ7',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ8',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ9',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ10',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ11',
+                'line_id'=> 1,
+
+            ],
+            [
+                'bus_no' => 1 ,
+                'seat_no' => 'XYZ12',
+                'line_id'=> 1,
+
+            ],
+
+        ]);
     }
 }
