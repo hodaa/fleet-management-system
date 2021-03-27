@@ -45,7 +45,16 @@ http://localhost:8081/api/v1/trips?start={start_point}&end={end_point}
 * header 
     * `access-token:{token-generated}` 
     * `Accept:application/json`
-    
+
+2- Book a seats
+http://localhost:8081/api/v1/trip/book
+* header
+    * `access-token:{token-generated}`
+    * `Accept:application/json`
+* Body
+  * `pickup_point:mansoura`
+  * `destination_point:tanta`
+  * `seat_id:XYZ9`
 ##Usage
 You can import database  directly ,it exists in the root folder.
 
