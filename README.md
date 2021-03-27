@@ -10,6 +10,9 @@ If you got the problem of file permission ,you should go enter the php image
 then type `sudo chown -R www-data:www-data storage/`
 
 * `php artisan migrate`
+* `php artisan passport:install`
+* `php artisan db:seed`
+
 
 
 ## Tools
@@ -23,17 +26,21 @@ then type `sudo chown -R www-data:www-data storage/`
 
 
 ## APIs
+
+This is the collection
+https://www.getpostman.com/collections/b7dd975e95031cf62429
+
 1- Generate token using
-http://localhost:8081/oauth/token
-`grant_type:client_credentials`
-`client_id:1`
-`client_secret:lTxmtOLeXLA65VmZ1cbU2C23aUwsrN5QSabkOvnp`
+http://localhost:8081/api/v1/login
+* Body
+    * `email:user@fleet.com`
+    * `password:12345678`
 
 2- Show available seats
 http://localhost:8081/api/v1/trips?start={start_point}&end={end_point}
 * header 
-    * access-token:{token-generated}  
-    * Accept:application/json
+    * `access-token:{token-generated}` 
+    * `Accept:application/json`
     
 
     

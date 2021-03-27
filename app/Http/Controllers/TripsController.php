@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TripBookRequest;
 use App\Http\Requests\TripsRequest;
-use App\Http\Resources\TripsResource;
 use App\Services\TripsService;
+use App\Http\Resources\SeatResource;
+use App\Http\Resources\TripResource;
 
 class TripsController extends Controller
 {
@@ -31,6 +33,19 @@ class TripsController extends Controller
         $start_id = $this->tripService->getStationId($request->input('start'));
         $end_id = $this->tripService->getStationId($request->input('end'));
         $seats = $this->tripService->getAvailableSeats($start_id, $end_id);
-        return response()->json(['data' => TripsResource::collection($seats)]);
+
+        return response()->json(['data' => TripResource::collection($seats)]);
+    }
+
+    public function book(TripBookRequest $request)
+    {
+        $user_id = auth()->user()->id;
+        try {
+            $seat =$this->tripService->bookSeat($request->id, $user_id, $request->pickup_point, $request->destination_point);
+        } catch (BookingE $exception) {
+            return response()->json("Something Went Wrong", 403);
+        }
+
+        return response()->json(["message"=>"Your seat booked successfully","data"=> new SeatResource($seat) ]);
     }
 }

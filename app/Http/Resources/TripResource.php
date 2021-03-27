@@ -6,7 +6,7 @@ use App\Models\LineOrder;
 use App\Models\Station;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TripsResource extends JsonResource
+class TripResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,8 +19,7 @@ class TripsResource extends JsonResource
         $pickup = $request->start;
         $destination = $request->end;
 
-        if($this->pickup_id !== null && $this->destination_id !== null) {
-
+        if ($this->pickup_id !== null && $this->destination_id !== null) {
             $start_id = Station::where('name', $request->start)->select('id')->first()->id;
             $end_id = Station::where('name', $request->end)->select('id')->first()->id;
 
@@ -30,7 +29,7 @@ class TripsResource extends JsonResource
             $end_order = LineOrder::where('station_id', $end_id)->where('line_id', $this->line_id)->select('order')->pluck('order')->first();
             $booked_end_order = LineOrder::where('station_id', $this->destination_id)->where('line_id', $this->line_id)->select('order')->pluck('order')->first();
 
-            if($booked_end_order <= $end_order){
+            if ($booked_end_order <= $end_order) {
                 $pickup = $this->destination->name;
             }
         }

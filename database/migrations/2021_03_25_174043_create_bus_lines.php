@@ -15,8 +15,8 @@ class CreateBusLines extends Migration
     {
         Schema::create('bus_lines', function (Blueprint $table) {
             $table->id();
-            $table->integer('bus_no');
-            $table->integer('seat_no')->unique();
+            $table->string('bus_no');
+            $table->string('seat_no')->unique();
             $table->integer('line_id');
 
             $table->unsignedBigInteger('pickup_id')->nullable();

@@ -49,4 +49,22 @@ class TripsService
                 ->where('l1.station_id', $start_id)->where('l2.next_station', $end_id)
                 ->orderBy('l1.order')->first())->line_id;
     }
+
+    /**
+     * @param $id
+     * @param $user_id
+     * @param $pickup_id
+     * @param $destination_id
+     * @return mixed
+     */
+    public function bookSeat($id, $user_id, $pickup_id, $destination_id)
+    {
+        $seat = BusLine::find($id);
+        $seat->update([
+            'user_id' => $user_id,
+            'pickup_id'=> $pickup_id,
+            'destination_id'=> $destination_id
+        ]);
+        return $seat;
+    }
 }
