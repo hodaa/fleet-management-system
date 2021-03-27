@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 27, 2021 at 01:02 PM
+-- Generation Time: Mar 27, 2021 at 05:04 PM
 -- Server version: 8.0.19
 -- PHP Version: 7.4.15
 
@@ -24,14 +24,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bus_lines`
+-- Table structure for table `booked_seats`
 --
 
-CREATE TABLE `bus_lines` (
+CREATE TABLE `booked_seats` (
   `id` bigint UNSIGNED NOT NULL,
-  `bus_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `seat_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `line_id` int NOT NULL,
+  `bus_id` bigint UNSIGNED NOT NULL,
   `pickup_id` bigint UNSIGNED DEFAULT NULL,
   `destination_id` bigint UNSIGNED DEFAULT NULL,
   `user_id` bigint UNSIGNED DEFAULT NULL,
@@ -40,22 +38,44 @@ CREATE TABLE `bus_lines` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bus_lines`
+-- Dumping data for table `booked_seats`
 --
 
-INSERT INTO `bus_lines` (`id`, `bus_no`, `seat_no`, `line_id`, `pickup_id`, `destination_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, '1', 'XYZ1', 1, 1, 4, 1, NULL, '2021-03-27 13:01:52'),
-(2, '1', 'XYZ2', 1, NULL, NULL, NULL, NULL, NULL),
-(3, '1', 'XYZ3', 1, NULL, NULL, NULL, NULL, NULL),
-(4, '1', 'XYZ4', 1, NULL, NULL, NULL, NULL, NULL),
-(5, '1', 'XYZ5', 1, NULL, NULL, NULL, NULL, NULL),
-(6, '1', 'XYZ6', 1, NULL, NULL, NULL, NULL, NULL),
-(7, '1', 'XYZ7', 1, NULL, NULL, NULL, NULL, NULL),
-(8, '1', 'XYZ8', 1, NULL, NULL, NULL, NULL, NULL),
-(9, '1', 'XYZ9', 1, NULL, NULL, NULL, NULL, NULL),
-(10, '1', 'XYZ10', 1, NULL, NULL, NULL, NULL, NULL),
-(11, '1', 'XYZ11', 1, NULL, NULL, NULL, NULL, NULL),
-(12, '1', 'XYZ12', 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `booked_seats` (`id`, `bus_id`, `pickup_id`, `destination_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 9, 1, 3, 2, '2021-03-27 17:03:18', '2021-03-27 17:03:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buses`
+--
+
+CREATE TABLE `buses` (
+  `id` bigint UNSIGNED NOT NULL,
+  `bus_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `seat_no` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `line_id` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `buses`
+--
+
+INSERT INTO `buses` (`id`, `bus_no`, `seat_no`, `line_id`, `created_at`, `updated_at`) VALUES
+(1, '1', 'XYZ1', 1, NULL, NULL),
+(2, '1', 'XYZ2', 1, NULL, NULL),
+(3, '1', 'XYZ3', 1, NULL, NULL),
+(4, '1', 'XYZ4', 1, NULL, NULL),
+(5, '1', 'XYZ5', 1, NULL, NULL),
+(6, '1', 'XYZ6', 1, NULL, NULL),
+(7, '1', 'XYZ7', 1, NULL, NULL),
+(8, '1', 'XYZ8', 1, NULL, NULL),
+(9, '1', 'XYZ9', 1, NULL, NULL),
+(10, '1', 'XYZ10', 1, NULL, NULL),
+(11, '1', 'XYZ11', 1, NULL, NULL),
+(12, '1', 'XYZ12', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -136,7 +156,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2021_03_25_162117_create_table_station', 1),
 (9, '2021_03_25_173334_create_lines', 1),
 (10, '2021_03_25_174043_create_bus_lines', 1),
-(11, '2021_03_26_171941_create_bus_line_orders', 1);
+(11, '2021_03_26_171941_create_bus_line_orders', 1),
+(12, '2021_03_27_134311_create_booked_seats', 1);
 
 -- --------------------------------------------------------
 
@@ -161,7 +182,8 @@ CREATE TABLE `oauth_access_tokens` (
 --
 
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
-('1429d422a05f8db3db850e4363d955a3a9f5afee72c587e6c287a6453f2feba47dde761b25b16490', 1, 1, 'FleetApp', '[]', 0, '2021-03-27 13:01:13', '2021-03-27 13:01:13', '2022-03-27 13:01:13');
+('7ea915c2e7f1ece0d19ef26f2d58eacd407504fa3a29ef049c23d00df7b21071fa0956591756b208', 1, 1, 'FleetApp', '[]', 0, '2021-03-27 13:57:46', '2021-03-27 13:57:46', '2022-03-27 13:57:46'),
+('853f8332e7ac8a602c86af934f87d25f7227db65fa03f43117df9337b9afc513415f55619487877a', 2, 1, 'FleetApp', '[]', 0, '2021-03-27 16:08:21', '2021-03-27 16:08:21', '2022-03-27 16:08:21');
 
 -- --------------------------------------------------------
 
@@ -203,8 +225,8 @@ CREATE TABLE `oauth_clients` (
 --
 
 INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `provider`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Laravel Personal Access Client', 'Kw3X4agCoZ7kdo7N42tKwU60eUpZOeb6odTmaJtg', NULL, 'http://localhost', 1, 0, 0, '2021-03-27 13:00:57', '2021-03-27 13:00:57'),
-(2, NULL, 'Laravel Password Grant Client', 'F4pKGzZUlRSjLjDTRckMhz838zoChw4T2GHcnxjf', 'users', 'http://localhost', 0, 1, 0, '2021-03-27 13:00:57', '2021-03-27 13:00:57');
+(1, NULL, 'Laravel Personal Access Client', 'gfAFec7QWUJqvKjQPltoGltt5ComV0Jtsd0Ey2I5', NULL, 'http://localhost', 1, 0, 0, '2021-03-27 13:57:37', '2021-03-27 13:57:37'),
+(2, NULL, 'Laravel Password Grant Client', 'lkwlTIgWBibeY8MTQKyI2H6VoIWUqAe3D5DnTXRK', 'users', 'http://localhost', 0, 1, 0, '2021-03-27 13:57:37', '2021-03-27 13:57:37');
 
 -- --------------------------------------------------------
 
@@ -224,7 +246,7 @@ CREATE TABLE `oauth_personal_access_clients` (
 --
 
 INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2021-03-27 13:00:57', '2021-03-27 13:00:57');
+(1, 1, '2021-03-27 13:57:37', '2021-03-27 13:57:37');
 
 -- --------------------------------------------------------
 
@@ -296,21 +318,28 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'hoda', 'user@fleet.com', NULL, '$2y$10$7oGBTgehH/sQ95jidt/tN.Cckl/3rFG.nrsTx6BkbX/.upC3wUR6O', NULL, NULL, NULL);
+(2, 'hoda', 'user@fleet.com', NULL, '$2y$10$pUaFZRFTvQDTHrYp2Y6T.u7fA5IWYqZK9NycUGY/3o.S4oQF1ntBS', NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `bus_lines`
+-- Indexes for table `booked_seats`
 --
-ALTER TABLE `bus_lines`
+ALTER TABLE `booked_seats`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `bus_lines_seat_no_unique` (`seat_no`),
-  ADD KEY `bus_lines_pickup_id_foreign` (`pickup_id`),
-  ADD KEY `bus_lines_destination_id_foreign` (`destination_id`),
-  ADD KEY `bus_lines_user_id_foreign` (`user_id`);
+  ADD KEY `booked_seats_seat_id_foreign` (`bus_id`),
+  ADD KEY `booked_seats_pickup_id_foreign` (`pickup_id`),
+  ADD KEY `booked_seats_destination_id_foreign` (`destination_id`),
+  ADD KEY `booked_seats_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `buses`
+--
+ALTER TABLE `buses`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `buses_seat_no_unique` (`seat_no`);
 
 --
 -- Indexes for table `lines`
@@ -393,9 +422,15 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `bus_lines`
+-- AUTO_INCREMENT for table `booked_seats`
 --
-ALTER TABLE `bus_lines`
+ALTER TABLE `booked_seats`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `buses`
+--
+ALTER TABLE `buses`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
@@ -414,7 +449,7 @@ ALTER TABLE `line_orders`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -438,19 +473,20 @@ ALTER TABLE `stations`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `bus_lines`
+-- Constraints for table `booked_seats`
 --
-ALTER TABLE `bus_lines`
-  ADD CONSTRAINT `bus_lines_destination_id_foreign` FOREIGN KEY (`destination_id`) REFERENCES `stations` (`id`),
-  ADD CONSTRAINT `bus_lines_pickup_id_foreign` FOREIGN KEY (`pickup_id`) REFERENCES `stations` (`id`),
-  ADD CONSTRAINT `bus_lines_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+ALTER TABLE `booked_seats`
+  ADD CONSTRAINT `booked_seats_destination_id_foreign` FOREIGN KEY (`destination_id`) REFERENCES `stations` (`id`),
+  ADD CONSTRAINT `booked_seats_pickup_id_foreign` FOREIGN KEY (`pickup_id`) REFERENCES `stations` (`id`),
+  ADD CONSTRAINT `booked_seats_seat_id_foreign` FOREIGN KEY (`bus_id`) REFERENCES `buses` (`id`),
+  ADD CONSTRAINT `booked_seats_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `lines`

@@ -42,8 +42,8 @@ class TripsController extends Controller
         $user_id = auth()->user()->id;
         try {
             $seat =$this->tripService->bookSeat($request->bus_id, $user_id, $request->pickup_id, $request->destination_id);
-        } catch (BookingE $exception) {
-            return response()->json("Something Went Wrong", 403);
+        } catch (\Exception $exception) {
+            return response()->json(["message"=>"Something went wrong"], 403);
         }
 
         return response()->json(["message"=>"Your seat booked successfully","data"=> new SeatResource($seat) ]);

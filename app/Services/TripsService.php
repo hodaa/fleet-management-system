@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\Models\BookedSeat;
 use App\Models\Bus;
-use App\Models\BusLine;
 use App\Models\Station;
 use DB;
 use Illuminate\Support\Carbon;
@@ -22,6 +21,7 @@ class TripsService
     }
 
 
+
     /**
      * @param $start_id
      * @param $end_id
@@ -34,11 +34,12 @@ class TripsService
                 ->join('lines', 'lines.id', 'buses.line_id');
         })->join('lines', 'buses.line_id', 'lines.id')
             ->leftJoin('booked_seats', 'buses.id', '=', 'booked_seats.bus_id')
-            ->where(function ($query) use ($start_id, $end_id) {
-                $query->whereNull('booked_seats.pickup_id')->whereNull('booked_seats.destination_id');
-            })->orWhere(function ($query) use ($start_id, $end_id) {
-                $query->where("booked_seats.destination_id", '!=', $end_id);
-            })->get();
+           ->where(function ($query) use ($start_id, $end_id) {
+                $query->where("booked_seats.destination_id", '!=', $end_id)
+                   ->whereRaw("not (booked_seats.destination_id = $end_id AND booked_seats.pickup_id = $start_id)");
+           })->orWhere(function ($query) use ($start_id, $end_id) {
+               $query->whereNull('booked_seats.pickup_id')->whereNull('booked_seats.destination_id');
+           })->get();
     }
 
     /**
