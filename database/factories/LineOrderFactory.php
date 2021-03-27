@@ -11,6 +11,7 @@ $factory->define(LineOrder::class, function (Faker $faker) {
     return [
         'line_id' =>  factory(Line::class)->create()->id,
         'station_id' => factory(Station::class)->create()->id,
+        'next_station' => null,
         'order'=> 1
     ];
 });

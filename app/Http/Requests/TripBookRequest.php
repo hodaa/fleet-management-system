@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Services\TripsService;
 
 class TripBookRequest extends FormRequest
 {
@@ -24,17 +25,24 @@ class TripBookRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' =>'required|exists:bus_lines,id',
-            'pickup_point' =>'required|exists:stations,id',
-            'destination_point' => 'required|exists:stations,id'
-
+            'seat_id' =>'required|exists:buses,seat_no',
+            'pickup_point' =>'required|exists:stations,name',
+            'destination_point' => 'required|exists:stations,name'
         ];
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): TripBookRequest
     {
+        $pickup_id =app(TripsService::class)->getStationId(request()->pickup_point);
+        $destination_id = app(TripsService::class)->getStationId(request()->destination_point);
+
+        $line_id= app(TripsService::class)->getLineId($pickup_id, $destination_id);
+
+
         $data = [
-            'id' => request()->id,
+            'pickup_id' => app(TripsService::class)->getStationId(request()->pickup_point),
+            'destination_id' => app(TripsService::class)->getStationId(request()->destination_point),
+            'bus_id' => app(TripsService::class)->getBusId($line_id, request()->seat_id)
         ];
         return $this->merge($data);
     }

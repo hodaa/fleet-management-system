@@ -41,7 +41,7 @@ class TripsController extends Controller
     {
         $user_id = auth()->user()->id;
         try {
-            $seat =$this->tripService->bookSeat($request->id, $user_id, $request->pickup_point, $request->destination_point);
+            $seat =$this->tripService->bookSeat($request->bus_id, $user_id, $request->pickup_id, $request->destination_id);
         } catch (BookingE $exception) {
             return response()->json("Something Went Wrong", 403);
         }

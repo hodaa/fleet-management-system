@@ -2,7 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\BusLine;
+use App\Models\Bus;
+use App\Models\Line;
 use App\Models\LineOrder;
 use App\Models\Station;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,9 +20,12 @@ class TripsApiTests extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
         Artisan::call('passport:install');
+
         factory(Station::class)->create(['name'=>'tanta']);
         factory(Station::class)->create(['name'=>'cairo']);
+
         $user= factory(User::class)->create([
             'email'=>'user@gmail.com',
             'password'=>Hash::make('12345678'),
@@ -82,8 +86,9 @@ class TripsApiTests extends TestCase
 
     public function testApiSucceeded()
     {
+        $line = factory(Line::class)->create();
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>1, 'next_station'=>2,'order'=>1]);
 
-        factory(LineOrder::class)->create(['station_id'=>1, 'next_station'=>2,'order'=>1]);
         $this->get('/api/v1/trips?start=tanta&end=cairo', [
             'Accept'=>'application/json',
             'Authorization'=> 'Bearer '.$this->token
@@ -94,10 +99,11 @@ class TripsApiTests extends TestCase
     public function testBookingApiValidation()
     {
         $response = $this->post(
-            '/api/v1/trip/book/1',
+            '/api/v1/trip/book',
             [
-            'pickup_point'=> 3,
-            'destination_point'=>4],
+                'pickup_point'=> 'aaaa',
+                'destination_point'=>'bbb',
+            ],
             [
             'Accept'=>'application/json',
             'Authorization'=> 'Bearer '.$this->token
@@ -107,7 +113,7 @@ class TripsApiTests extends TestCase
         $response->assertStatus(422)->assertExactJson([
             'message'=>'The given data was invalid.',
             'errors'=>[
-                "id" => ["The selected id is invalid."],
+                "seat_id" => ["The seat id field is required."],
                 "destination_point"=>["The selected destination point is invalid."],
                 'pickup_point'=> ['The selected pickup point is invalid.'],
 
@@ -117,19 +123,27 @@ class TripsApiTests extends TestCase
 
     public function testBookingApiSucceeded()
     {
-        factory(BusLine::class)->create();
+        $line = factory(Line::class)->create();
+
+        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 1 ,'next_station'=>2, 'order'=>1]);
+        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 2 ,'next_station'=>3, 'order'=>2]);
+        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 3,'next_station'=>4,  'order'=>3]);
+        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 4, 'order'=> 4]);
+
+        factory(Bus::class)->create(['seat_no'=>'XYZ1']);
         $response = $this->post(
-            '/api/v1/trip/book/1',
+            '/api/v1/trip/book',
             [
-                'pickup_point'=> 1,
-                'destination_point'=>2
+                'pickup_point'=> 'tanta',
+                'destination_point'=>'cairo',
+                'seat_id'=>'XYZ1'
             ],
             [
                 'Accept'=>'application/json',
                 'Authorization'=> 'Bearer '.$this->token
             ]
         );
-        $this->assertDatabaseHas('bus_lines', ['pickup_id'=>1,'destination_id'=>2 ,'user_id'=>1]);
+        $this->assertDatabaseHas('booked_seats', ['pickup_id'=>1,'destination_id'=>2 ,'user_id'=>1]);
         $response->assertStatus(200)->assertJson([
             'message'=>'The given data was invalid.',
             'data'=>[

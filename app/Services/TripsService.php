@@ -3,9 +3,12 @@
 
 namespace App\Services;
 
+use App\Models\BookedSeat;
+use App\Models\Bus;
 use App\Models\BusLine;
 use App\Models\Station;
 use DB;
+use Illuminate\Support\Carbon;
 
 class TripsService
 {
@@ -13,7 +16,7 @@ class TripsService
      * @param $stationName
      * @return mixed
      */
-    public function getStationId(string $stationName) :?int
+    public function getStationId($stationName) :?int
     {
         return optional(Station::where('name', $stationName)->select('id')->first())->id;
     }
@@ -26,14 +29,15 @@ class TripsService
      */
     public function getAvailableSeats($start_id, $end_id)
     {
-        return BusLine::where(function ($query) use ($start_id, $end_id) {
+        return Bus::where(function ($query) use ($start_id, $end_id) {
             $query->where('line_id', $this->getLineId($start_id, $end_id))
-                ->join('lines', 'lines.id', 'bus_lines.line_id');
-        })->join('lines', 'bus_lines.line_id', 'lines.id')
+                ->join('lines', 'lines.id', 'buses.line_id');
+        })->join('lines', 'buses.line_id', 'lines.id')
+            ->leftJoin('booked_seats', 'buses.id', '=', 'booked_seats.bus_id')
             ->where(function ($query) use ($start_id, $end_id) {
-                $query->whereNull('pickup_id')->whereNull('destination_id');
+                $query->whereNull('booked_seats.pickup_id')->whereNull('booked_seats.destination_id');
             })->orWhere(function ($query) use ($start_id, $end_id) {
-                $query->where("destination_id", '!=', $end_id);
+                $query->where("booked_seats.destination_id", '!=', $end_id);
             })->get();
     }
 
@@ -59,12 +63,22 @@ class TripsService
      */
     public function bookSeat($id, $user_id, $pickup_id, $destination_id)
     {
-        $seat = BusLine::find($id);
-        $seat->update([
-            'user_id' => $user_id,
-            'pickup_id'=> $pickup_id,
-            'destination_id'=> $destination_id
-        ]);
-        return $seat;
+        return BookedSeat::create([
+             'bus_id'=> $id,
+             'user_id' => $user_id,
+             'pickup_id'=> $pickup_id,
+             'destination_id'=> $destination_id,
+             'created_at' => Carbon::now(),
+             'updated_at'=> Carbon::now()
+         ]);
+    }
+    /**
+     * @param $line_id
+     * @param $seat_id
+     * @return int|null
+     */
+    public function getBusId($line_id, $seat_id) :?int
+    {
+        return optional(Bus::where(["seat_no" => $seat_id, "line_id"=> $line_id])->first())->id;
     }
 }

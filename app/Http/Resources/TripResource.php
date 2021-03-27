@@ -30,7 +30,7 @@ class TripResource extends JsonResource
             $booked_end_order = LineOrder::where('station_id', $this->destination_id)->where('line_id', $this->line_id)->select('order')->pluck('order')->first();
 
             if ($booked_end_order <= $end_order) {
-                $pickup = $this->destination->name;
+                $pickup = optional($this->destination)->name?? $request->end;
             }
         }
 

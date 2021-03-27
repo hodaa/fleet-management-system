@@ -83,7 +83,7 @@ class StationSeeder extends Seeder
             ],
         ]);
 
-        DB::table('bus_lines')->insert([
+        DB::table('buses')->insert([
             [
                 'bus_no' => 1 ,
                 'seat_no' => 'XYZ1',

@@ -13,20 +13,11 @@ class CreateBusLines extends Migration
      */
     public function up()
     {
-        Schema::create('bus_lines', function (Blueprint $table) {
+        Schema::create('buses', function (Blueprint $table) {
             $table->id();
             $table->string('bus_no');
             $table->string('seat_no')->unique();
             $table->integer('line_id');
-
-            $table->unsignedBigInteger('pickup_id')->nullable();
-            $table->foreign('pickup_id')->references('id')->on('stations');
-
-            $table->unsignedBigInteger('destination_id')->nullable();
-            $table->foreign('destination_id')->references('id')->on('stations');
-
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
@@ -39,6 +30,6 @@ class CreateBusLines extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bus_lines');
+        Schema::dropIfExists('buses');
     }
 }

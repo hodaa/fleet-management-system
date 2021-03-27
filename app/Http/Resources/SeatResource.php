@@ -15,8 +15,8 @@ class SeatResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'bus_no' => $this->bus_no,
-            'seat_no' => $this->seat_no,
+            'bus_no' => $this->bus->bus_no,
+            'seat_no' => $this->bus->seat_no,
             'pickup_station' => optional($this->pickup)->name,
             'destination_station' => optional($this->destination)->name,
             'user'=> $this->user->name
