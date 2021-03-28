@@ -31,10 +31,8 @@ docker-compose exec php vendor/phpunit/bin
 
 ## APIs
 
-This is the collection
-https://www.getpostman.com/collections/b7dd975e95031cf62429
 
-1- Generate token using
+1- Generate token using 
 http://localhost:8081/api/v1/login
 * Body
     * `email:user@fleet.com`
@@ -46,7 +44,7 @@ http://localhost:8081/api/v1/trips?start={start_point}&end={end_point}
     * `access-token:{token-generated}` 
     * `Accept:application/json`
 
-2- Book a seats
+3- Book a seat
 http://localhost:8081/api/v1/trip/book
 * header
     * `access-token:{token-generated}`
@@ -55,8 +53,14 @@ http://localhost:8081/api/v1/trip/book
   * `pickup_point:mansoura`
   * `destination_point:tanta`
   * `seat_id:XYZ9`
-##Usage
-You can import database  directly ,it exists in the root folder.
+
+
+## Usage
+
+ 1. You can import database  directly ,it exists in the root folder.
+
+ 2. Import collection directly: https://www.getpostman.com/collections/b7dd975e95031cf62429 
+
 
     
 
