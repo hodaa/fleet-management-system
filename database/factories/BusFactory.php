@@ -7,7 +7,7 @@ use App\Models\Bus;
 
 $factory->define(Bus::class, function (Faker $faker) {
     return [
-        'bus_no'=>$faker->text(5),
+        'bus_no'=>$faker->numberBetween(1,5),
         'seat_no' => $faker->unique()->name,
         'line_id' => 1,
 

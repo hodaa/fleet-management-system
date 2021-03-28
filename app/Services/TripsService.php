@@ -51,8 +51,11 @@ class TripsService
     {
         return optional(DB::table('line_orders as l1')
                 ->join('line_orders as l2', 'l1.line_id', 'l2.line_id')
-                ->where('l1.station_id', $start_id)->where('l2.next_station', $end_id)
-                ->orderBy('l1.order')->first())->line_id;
+                ->where('l1.station_id', $start_id)
+                ->groupBy('l1.line_id')
+                ->havingRaw('min(l1.`order`) < max(l2.`order`)')
+                ->select('l1.line_id')
+                ->first())->line_id;
     }
 
     /**

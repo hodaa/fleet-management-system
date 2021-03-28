@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\BookedSeat;
 use App\Models\Bus;
 use App\Models\Line;
 use App\Models\LineOrder;
@@ -23,8 +24,21 @@ class TripsApiTests extends TestCase
 
         Artisan::call('passport:install');
 
+
+        factory(Station::class)->create(['name'=>'mansoura']);
+        factory(Station::class)->create(['name'=>'sammnoud']);
+        factory(Station::class)->create(['name'=>'mahala']);
         factory(Station::class)->create(['name'=>'tanta']);
+        factory(Station::class)->create(['name'=>'banha']);
         factory(Station::class)->create(['name'=>'cairo']);
+        $line = factory(Line::class)->create();
+
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>1, 'next_station'=>2,'order'=>1]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>2, 'next_station'=>3,'order'=>2]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>3, 'next_station'=>4,'order'=>3]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>4, 'next_station'=>5,'order'=>4]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>5, 'next_station'=>6,'order'=>5]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>5, 'order'=>6]);
 
         $user= factory(User::class)->create([
             'email'=>'user@gmail.com',
@@ -84,17 +98,101 @@ class TripsApiTests extends TestCase
         ]);
     }
 
-    public function testApiSucceeded()
+    public function testAvailableSeatsApiSucceeded()
     {
-        $line = factory(Line::class)->create();
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>1, 'next_station'=>2,'order'=>1]);
 
-        $this->get('/api/v1/trips?start=tanta&end=cairo', [
+        $res= $this->get('/api/v1/trips?start=tanta&end=cairo', [
             'Accept'=>'application/json',
             'Authorization'=> 'Bearer '.$this->token
 
         ])->assertStatus(200);
     }
+
+    public function testAvailableSeatsForInBetweenStation()
+    {
+        factory(Bus::class)->create(['seat_no'=>'XYZ1']);
+        factory(Bus::class)->create(['seat_no'=>'XYZ2']);
+        factory(Bus::class)->create(['seat_no'=>'XYZ3']);
+
+        $response= $this->get('/api/v1/trips?start=sammnoud&end=banha', [
+            'Accept'=>'application/json',
+            'Authorization'=> 'Bearer '.$this->token
+
+        ]);
+        $this->assertCount(3, $response->json()['data']);
+    }
+
+    public function testAvailableSeatsAfterBookingOne()
+    {
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ1']);
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ2']);
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ3']);
+
+        factory(BookedSeat::class)->create(['pickup_id'=>1 ,'destination_id'=>3]);
+
+        $response= $this->get('/api/v1/trips?start=sammnoud&end=banha', [
+            'Accept'=>'application/json',
+            'Authorization'=> 'Bearer '.$this->token
+
+        ]);
+        $response->assertStatus(200)->assertJson([
+            'data'=>[
+                [
+                    "bus_no"=>"1",
+                    "seat_no"=>"XYZ1",
+                    "pickup_station"=>"mahala",
+                    "destination_station"=>"banha"
+                ],
+                [
+                    "bus_no"=>"1",
+                    "seat_no"=>"XYZ2",
+                    "pickup_station"=>"sammnoud",
+                    "destination_station"=>"banha"
+                ],
+                [
+                    "bus_no"=>"1",
+                    "seat_no"=>"XYZ3",
+                    "pickup_station"=>"sammnoud",
+                    "destination_station"=>"banha"
+                ]
+
+            ],
+        ]);
+    }
+
+    public function testOneSeatIsFullyBooked()
+    {
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ1']);
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ2']);
+        factory(Bus::class)->create(['bus_no'=>1,'seat_no'=>'XYZ3']);
+
+        factory(BookedSeat::class)->create(['bus_id'=>1,'pickup_id'=>1 ,'destination_id'=>6]);
+
+        $response= $this->get('/api/v1/trips?start=sammnoud&end=cairo', [
+            'Accept'=>'application/json',
+            'Authorization'=> 'Bearer '.$this->token
+
+        ]);
+
+        $response->assertStatus(200)->assertJson([
+            'data'=>[
+                [
+                    "bus_no"=>"1",
+                    "seat_no"=>"XYZ2",
+                    "pickup_station"=>"sammnoud",
+                    "destination_station"=>"banha"
+                ],
+                [
+                    "bus_no"=>"1",
+                    "seat_no"=>"XYZ3",
+                    "pickup_station"=>"sammnoud",
+                    "destination_station"=>"banha"
+                ]
+
+            ],
+        ]);
+    }
+
 
     public function testBookingApiValidation()
     {
@@ -123,12 +221,6 @@ class TripsApiTests extends TestCase
 
     public function testBookingApiSucceeded()
     {
-        $line = factory(Line::class)->create();
-
-        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 1 ,'next_station'=>2, 'order'=>1]);
-        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 2 ,'next_station'=>3, 'order'=>2]);
-        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 3,'next_station'=>4,  'order'=>3]);
-        factory(LineOrder::class)->create(['line_id'=> $line->id, 'station_id'=> 4, 'order'=> 4]);
 
         factory(Bus::class)->create(['seat_no'=>'XYZ1']);
         $response = $this->post(
@@ -143,9 +235,13 @@ class TripsApiTests extends TestCase
                 'Authorization'=> 'Bearer '.$this->token
             ]
         );
-        $this->assertDatabaseHas('booked_seats', ['pickup_id'=>1,'destination_id'=>2 ,'user_id'=>1]);
+        $this->assertDatabaseHas('booked_seats', [
+            'bus_id'=>1,
+            'pickup_id'=>4,
+            'destination_id'=>6 ,
+            'user_id'=>1
+        ]);
         $response->assertStatus(200)->assertJson([
-            'message'=>'The given data was invalid.',
             'data'=>[
                  'pickup_station' => 'tanta',
                  'destination_station' => 'cairo',

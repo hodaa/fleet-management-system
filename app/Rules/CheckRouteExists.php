@@ -29,6 +29,8 @@ class CheckRouteExists implements Rule
         $start_id= app(TripsService::class)->getStationId(request()->start);
         $end_id = app(TripsService::class)->getStationId(request()->end);
 
+
+
         return  app(TripsService::class)->getLineId($start_id, $end_id) ? true :false;
     }
 
