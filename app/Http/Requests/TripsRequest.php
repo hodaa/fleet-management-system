@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Station;
 use App\Rules\CheckRouteExists;
-use App\Services\TripsService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TripsRequest extends FormRequest

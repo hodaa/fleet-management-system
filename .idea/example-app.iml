@@ -125,5 +125,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="emr-php" />
     <orderEntry type="module" module-name="Bus_Vehicle_Management" />
+    <orderEntry type="module" module-name="demo" />
+    <orderEntry type="module" module-name="sport-cms" />
+    <orderEntry type="module" module-name="fleet_managment" />
   </component>
 </module>

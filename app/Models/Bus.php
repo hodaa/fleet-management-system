@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bus extends Model
 {
@@ -11,8 +12,22 @@ class Bus extends Model
      */
     public function line()
     {
-        return $this->belongsTo(Line::class);
+        return $this->hasOne(Line::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function Seats(): HasMany
+    {
+        return $this->hasMany(Seat::class);
+    }
+    public function notAvailableSeats($line_id, $start_id, $end_id)
+    {
 
+        return $this->belongsToMany(BookedSeat::class, 'booked_seats')
+            ->where('line_id', $line_id)
+            ->where('booked_seats.pickup_id', '<=', $start_id)
+            ->where('booked_seats.destination_id', '>', $end_id);
+    }
 }

@@ -29,27 +29,27 @@ class StationSeeder extends Seeder
                 'line_id' => 1 ,
                 'station_id' => 1,
                 'next_station'=> 2,
-                'order' => 1
+                'station_order' => 1
 
             ],
             [
                 'line_id' => 1 ,
                 'station_id' => 2,
                 'next_station'=> 3,
-                'order' => 2
+                'station_order' => 2
 
             ],
             [
                 'line_id' => 1 ,
                 'station_id' => 3,
                 'next_station'=> 4,
-                'order' => 3
+                'station_order' => 3
 
             ],
             [
                 'line_id' => 1 ,
                 'station_id' => 4,
-                'order' => 4,
+                'station_order' => 4,
                 'next_station'=> null,
 
             ],
@@ -57,27 +57,27 @@ class StationSeeder extends Seeder
                 'line_id' => 2 ,
                 'station_id' => 4,
                 'next_station'=> 3,
-                'order' => 1
+                'station_order' => 1
 
             ],
             [
                 'line_id' => 2 ,
                 'station_id' => 3,
                 'next_station'=> 2,
-                'order' => 2
+                'station_order' => 2
 
             ],
             [
                 'line_id' => 2 ,
                 'station_id' => 2,
                 'next_station'=> 1,
-                'order' => 3
+                'station_order' => 3
 
             ],
             [
                 'line_id' => 2 ,
                 'station_id' => 1,
-                'order' => 4,
+                'station_order' => 4,
                 'next_station'=> null,
 
             ],

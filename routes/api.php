@@ -16,5 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('v1/register', 'AuthController@register');
 Route::post('v1/login', 'AuthController@login');
 
-Route::middleware('auth:api')->get('/v1/trips', 'TripsController@index');
-Route::middleware('auth:api')->post('/v1/trip/book', 'TripsController@book');
+Route::middleware('auth:api')->get('/v1/trips', 'TripController@index');
+Route::middleware('auth:api')->post('/v1/trip/book', 'TripController@book');

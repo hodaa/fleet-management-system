@@ -33,12 +33,11 @@ class TripsApiTests extends TestCase
         factory(Station::class)->create(['name'=>'cairo']);
         $line = factory(Line::class)->create();
 
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>1, 'next_station'=>2,'order'=>1]);
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>2, 'next_station'=>3,'order'=>2]);
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>3, 'next_station'=>4,'order'=>3]);
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>4, 'next_station'=>5,'order'=>4]);
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>5, 'next_station'=>6,'order'=>5]);
-        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>5, 'order'=>6]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>1, 'next_station'=>2]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>2, 'next_station'=>3]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>3, 'next_station'=>4]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>4, 'next_station'=>5]);
+        factory(LineOrder::class)->create(['line_id'=>$line->id,'station_id'=>5, 'next_station'=>6]);
 
         $user= factory(User::class)->create([
             'email'=>'user@gmail.com',

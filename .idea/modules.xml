@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../Bus_Vehicle_Management/.idea/Bus_Vehicle_Management.iml" filepath="$PROJECT_DIR$/../Bus_Vehicle_Management/.idea/Bus_Vehicle_Management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../demo/.idea/demo.iml" filepath="$PROJECT_DIR$/../demo/.idea/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/../emr/.idea/emr-php.iml" filepath="$PROJECT_DIR$/../emr/.idea/emr-php.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/example-app.iml" filepath="$PROJECT_DIR$/.idea/example-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Fleet-Mangament/.idea/fleet_managment.iml" filepath="$PROJECT_DIR$/../Fleet-Mangament/.idea/fleet_managment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sport-cms/.idea/sport-cms.iml" filepath="$PROJECT_DIR$/../sport-cms/.idea/sport-cms.iml" />
     </modules>
   </component>
 </project>

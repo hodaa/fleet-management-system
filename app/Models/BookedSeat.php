@@ -35,6 +35,6 @@ class BookedSeat extends Model
 
     public function bus()
     {
-        return $this->belongsTo(bus::class);
+        return $this->belongsTo(Bus::class);
     }
 }

@@ -25,7 +25,6 @@ class CreateBusLineOrders extends Migration
             $table->unsignedBigInteger('next_station')->nullable();
             $table->foreign('next_station')->references('id')->on('stations');
 
-            $table->tinyInteger('order');
 
             $table->timestamps();
         });

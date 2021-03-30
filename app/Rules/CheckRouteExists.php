@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Services\TripsService;
+use App\Services\TripService;
 use Illuminate\Contracts\Validation\Rule;
 
 class CheckRouteExists implements Rule
@@ -26,12 +26,12 @@ class CheckRouteExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $start_id= app(TripsService::class)->getStationId(request()->start);
-        $end_id = app(TripsService::class)->getStationId(request()->end);
+        $start_id= app(TripService::class)->getStationId(request()->start);
+        $end_id = app(TripService::class)->getStationId(request()->end);
 
 
 
-        return  app(TripsService::class)->getLineId($start_id, $end_id) ? true :false;
+        return  app(TripService::class)->getLineId($start_id, $end_id) ? true :false;
     }
 
     /**
